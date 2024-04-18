@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Monogame_Lesson_3___Animation_Part_1
 {
@@ -36,6 +37,9 @@ namespace Monogame_Lesson_3___Animation_Part_1
         Vector2 tribbleCreamSpeed;
         //
 
+        Color bgColor;
+
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -51,10 +55,13 @@ namespace Monogame_Lesson_3___Animation_Part_1
             _graphics.PreferredBackBufferHeight = 600;
             _graphics.ApplyChanges();
 
+            Window.Title = "Epilepsy Warning";
+
             //Gray tribble 
             tribbleGreyTexture = Content.Load<Texture2D>("tribbleGrey");
             tribbleGreyRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
             tribbleGreySpeed = new Vector2(2, 2);
+            bgColor = Color.White;
             //
 
             //Brown tribble
@@ -70,7 +77,9 @@ namespace Monogame_Lesson_3___Animation_Part_1
             //
 
             //Cream tribble
-
+            tribbleCreamTexture = Content.Load<Texture2D>("tribbleCream");
+            tribbleCreamRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+            tribbleCreamSpeed = new Vector2(0, 2);
             //
 
             base.Initialize();
@@ -83,6 +92,12 @@ namespace Monogame_Lesson_3___Animation_Part_1
             // TODO: use this.Content to load your game content here
         }
 
+        private Color GetRandColor()
+        {
+            return new Color(_random.Next(0, 256), _random.Next(0, 256), _random.Next(0, 256));
+        }
+
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -91,8 +106,7 @@ namespace Monogame_Lesson_3___Animation_Part_1
             // TODO: Add your update logic here
 
             // Gray tribble
-            tribbleGreyRect.X += (int)tribbleGreySpeed.X;
-            tribbleGreyRect.Y += (int)tribbleGreySpeed.Y;
+            tribbleGreyRect.Offset(tribbleGreySpeed);
             if (tribbleGreyRect.Right > _graphics.PreferredBackBufferWidth)
             {
                 tribbleGreyRect.X = _graphics.PreferredBackBufferWidth - tribbleBrownRect.Width;
@@ -132,38 +146,81 @@ namespace Monogame_Lesson_3___Animation_Part_1
                 tribbleBrownRect.X = 0;
                 tribbleBrownSpeed = new Vector2(_random.Next(1, 16), 0);
             }
-
             //
 
-            //Orange tribble
+            //Orange tribble A.K.A the Tribble of Chaos
             tribbleOrangeRect.Offset(tribbleOrangeSpeed);
             if (tribbleOrangeRect.Right > _graphics.PreferredBackBufferWidth || tribbleOrangeRect.Left < 0)
             {
-                tribbleOrangeSpeed.X *= -2;
+                bgColor = GetRandColor();
+
+                tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+
+                if (tribbleOrangeSpeed.X < 205 & tribbleOrangeSpeed.X > 0)
+                {
+                    tribbleOrangeSpeed.X += 1;
+                }
+                else if (tribbleOrangeSpeed.X > -205 & tribbleOrangeSpeed.X < 0)
+                {
+                    tribbleOrangeSpeed.X -= 1;
+                }
+
+                tribbleOrangeSpeed.X *= -1;
             }
 
             if (tribbleOrangeRect.Bottom > _graphics.PreferredBackBufferHeight || tribbleOrangeRect.Top < 0)
             {
-                tribbleOrangeSpeed.Y *= -2;
+                bgColor = GetRandColor();
+
+                tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+
+                if (tribbleOrangeSpeed.Y < 200 & tribbleOrangeSpeed.Y > 0)
+                {
+                    tribbleOrangeSpeed.Y += 1;
+                }
+                else if (tribbleOrangeSpeed.Y > -200 & tribbleOrangeSpeed.Y < 0)
+                {
+                    tribbleOrangeSpeed.Y -= 1;
+                }
+
+                tribbleOrangeSpeed.Y *= -1;
+            }
+
+            if (tribbleOrangeRect.Intersects(tribbleGreyRect) || tribbleOrangeRect.Intersects(tribbleBrownRect) || tribbleOrangeRect.Intersects(tribbleCreamRect))
+            {
+                tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+
+                tribbleOrangeSpeed.X *= -1;
+                tribbleOrangeSpeed.Y *= 1;
             }
             //
 
             //Cream tribble
+            tribbleCreamRect.Offset(tribbleCreamSpeed);
+            if (tribbleCreamRect.Top > _graphics.PreferredBackBufferHeight)
+            {
+                tribbleCreamRect.Y = 0 - tribbleCreamRect.Height;
 
+                tribbleCreamSpeed.Y = _random.Next(1, 16);
+            }
+            //
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
-            // TODO: Add your drawing code here
-
+  
+                // TODO: Add your drawing code here
+            
+            GraphicsDevice.Clear(bgColor);
+            
             _spriteBatch.Begin();
             
             _spriteBatch.Draw(tribbleGreyTexture, tribbleGreyRect, Color.White);
             _spriteBatch.Draw(tribbleBrownTexture, tribbleBrownRect, Color.White);
-
+            _spriteBatch.Draw(tribbleCreamTexture, tribbleCreamRect, Color.White);
             _spriteBatch.Draw(tribbleOrangeTexture, tribbleOrangeRect, Color.White);
 
             _spriteBatch.End();
