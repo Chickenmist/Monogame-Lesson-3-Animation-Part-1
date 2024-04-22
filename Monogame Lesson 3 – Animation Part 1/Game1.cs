@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -39,6 +40,7 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
         Color bgColor;
 
+        SoundEffect tribbleCoo;
 
         public Game1()
         {
@@ -94,6 +96,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
             tribbleOrangeTexture = Content.Load<Texture2D>("tribbleOrange");
 
             tribbleCreamTexture = Content.Load<Texture2D>("tribbleCream");
+
+            tribbleCoo = Content.Load<SoundEffect>("tribble_coo");
         }
 
         private Color GetRandColor()
@@ -113,28 +117,36 @@ namespace Monogame_Lesson_3___Animation_Part_1
             tribbleGreyRect.Offset(tribbleGreySpeed);
             if (tribbleGreyRect.Right > _graphics.PreferredBackBufferWidth)
             {
-                tribbleGreyRect.X = _graphics.PreferredBackBufferWidth - tribbleBrownRect.Width;
+                tribbleGreyRect.X = _graphics.PreferredBackBufferWidth - tribbleGreyRect.Width;
 
                 tribbleGreySpeed = new Vector2(_random.Next(-15, 0), _random.Next(-15, 16));
+
+                tribbleCoo.Play();
             }
             else if (tribbleGreyRect.Left < 0)
             {
                 tribbleGreyRect.X = 0;
 
                 tribbleGreySpeed = new Vector2(_random.Next(1, 16), _random.Next(-15, 16));
+
+                tribbleCoo.Play();
             }
 
             if (tribbleGreyRect.Bottom > _graphics.PreferredBackBufferHeight)
             {
-                tribbleGreyRect.Y = _graphics.PreferredBackBufferHeight - tribbleBrownRect.Height;
+                tribbleGreyRect.Y = _graphics.PreferredBackBufferHeight - tribbleGreyRect.Height;
 
                 tribbleGreySpeed = new Vector2(_random.Next(-15, 16), _random.Next(-15, 0));
+
+                tribbleCoo.Play();
             }
             else if (tribbleGreyRect.Top < 0)
             {
                 tribbleGreyRect.Y = 0;
 
                 tribbleGreySpeed = new Vector2(_random.Next(-15, 16), _random.Next(1, 16));
+
+                tribbleCoo.Play();
             }
             //
 
@@ -160,11 +172,13 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
                 tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
 
-                if (tribbleOrangeSpeed.X < 300 & tribbleOrangeSpeed.X > 0)
+                tribbleCoo.Play();
+
+                if (tribbleOrangeSpeed.X < 500 & tribbleOrangeSpeed.X > 0)
                 {
                     tribbleOrangeSpeed.X += 1;
                 }
-                else if (tribbleOrangeSpeed.X > -300 & tribbleOrangeSpeed.X < 0)
+                else if (tribbleOrangeSpeed.X > -500 & tribbleOrangeSpeed.X < 0)
                 {
                     tribbleOrangeSpeed.X -= 1;
                 }
@@ -178,11 +192,13 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
                 tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
 
-                if (tribbleOrangeSpeed.Y < 300 & tribbleOrangeSpeed.Y > 0)
+                tribbleCoo.Play();
+
+                if (tribbleOrangeSpeed.Y < 500 & tribbleOrangeSpeed.Y > 0)
                 {
                     tribbleOrangeSpeed.Y += 1;
                 }
-                else if (tribbleOrangeSpeed.Y > -300 & tribbleOrangeSpeed.Y < 0)
+                else if (tribbleOrangeSpeed.Y > -500 & tribbleOrangeSpeed.Y < 0)
                 {
                     tribbleOrangeSpeed.Y -= 1;
                 }
@@ -193,6 +209,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
             if (tribbleOrangeRect.Intersects(tribbleGreyRect) || tribbleOrangeRect.Intersects(tribbleBrownRect) || tribbleOrangeRect.Intersects(tribbleCreamRect))
             {
                 tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+
+                tribbleCoo.Play();
 
                 tribbleOrangeSpeed.X *= -1;
                 tribbleOrangeSpeed.Y *= 1;
