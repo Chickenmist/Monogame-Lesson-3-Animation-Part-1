@@ -58,26 +58,22 @@ namespace Monogame_Lesson_3___Animation_Part_1
             Window.Title = "Epilepsy Warning";
 
             //Gray tribble 
-            tribbleGreyTexture = Content.Load<Texture2D>("tribbleGrey");
             tribbleGreyRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
             tribbleGreySpeed = new Vector2(2, 2);
             bgColor = Color.White;
             //
 
             //Brown tribble
-            tribbleBrownTexture = Content.Load<Texture2D>("tribbleBrown");
             tribbleBrownRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
             tribbleBrownSpeed = new Vector2(2, 0);
             //
 
             //Orange tribble
-            tribbleOrangeTexture = Content.Load<Texture2D>("tribbleOrange");
             tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
             tribbleOrangeSpeed = new Vector2(2, 2);
             //
 
             //Cream tribble
-            tribbleCreamTexture = Content.Load<Texture2D>("tribbleCream");
             tribbleCreamRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
             tribbleCreamSpeed = new Vector2(0, 2);
             //
@@ -90,6 +86,14 @@ namespace Monogame_Lesson_3___Animation_Part_1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            tribbleGreyTexture = Content.Load<Texture2D>("tribbleGrey");
+
+            tribbleBrownTexture = Content.Load<Texture2D>("tribbleBrown");
+
+            tribbleOrangeTexture = Content.Load<Texture2D>("tribbleOrange");
+
+            tribbleCreamTexture = Content.Load<Texture2D>("tribbleCream");
         }
 
         private Color GetRandColor()
