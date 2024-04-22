@@ -156,11 +156,11 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
                 tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
 
-                if (tribbleOrangeSpeed.X < 205 & tribbleOrangeSpeed.X > 0)
+                if (tribbleOrangeSpeed.X < 300 & tribbleOrangeSpeed.X > 0)
                 {
                     tribbleOrangeSpeed.X += 1;
                 }
-                else if (tribbleOrangeSpeed.X > -205 & tribbleOrangeSpeed.X < 0)
+                else if (tribbleOrangeSpeed.X > -300 & tribbleOrangeSpeed.X < 0)
                 {
                     tribbleOrangeSpeed.X -= 1;
                 }
@@ -174,11 +174,11 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
                 tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
 
-                if (tribbleOrangeSpeed.Y < 200 & tribbleOrangeSpeed.Y > 0)
+                if (tribbleOrangeSpeed.Y < 300 & tribbleOrangeSpeed.Y > 0)
                 {
                     tribbleOrangeSpeed.Y += 1;
                 }
-                else if (tribbleOrangeSpeed.Y > -200 & tribbleOrangeSpeed.Y < 0)
+                else if (tribbleOrangeSpeed.Y > -300 & tribbleOrangeSpeed.Y < 0)
                 {
                     tribbleOrangeSpeed.Y -= 1;
                 }
