@@ -38,9 +38,22 @@ namespace Monogame_Lesson_3___Animation_Part_1
         Vector2 tribbleCreamSpeed;
         //
 
+        Texture2D tribbleIntroTexture;
+        Rectangle tribbleIntroRect;
+
         Color bgColor;
 
         SoundEffect tribbleCoo;
+
+        MouseState mouseState;
+
+        enum Screen
+        {
+            Intro,
+            TribbleYard
+        }
+
+        Screen screen;
 
         public Game1()
         {
@@ -57,12 +70,14 @@ namespace Monogame_Lesson_3___Animation_Part_1
             _graphics.PreferredBackBufferHeight = 600;
             _graphics.ApplyChanges();
 
-            Window.Title = "Epilepsy Warning";
+            Window.Title = "Tribble Yard";
+
+            screen = Screen.Intro;
+            tribbleIntroRect = new Rectangle(0, 0, 800, 600);
 
             //Gray tribble 
             tribbleGreyRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
             tribbleGreySpeed = new Vector2(2, 2);
-            bgColor = Color.White;
             //
 
             //Brown tribble
@@ -97,6 +112,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
             tribbleCreamTexture = Content.Load<Texture2D>("tribbleCream");
 
+            tribbleIntroTexture = Content.Load<Texture2D>("tribble_intro");
+
             tribbleCoo = Content.Load<SoundEffect>("tribble_coo");
         }
 
@@ -108,127 +125,143 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
         protected override void Update(GameTime gameTime)
         {
+            mouseState = Mouse.GetState();
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
 
-            // Gray tribble
-            tribbleGreyRect.Offset(tribbleGreySpeed);
-            if (tribbleGreyRect.Right > _graphics.PreferredBackBufferWidth)
+            if (screen == Screen.Intro)
             {
-                tribbleGreyRect.X = _graphics.PreferredBackBufferWidth - tribbleGreyRect.Width;
-
-                tribbleGreySpeed = new Vector2(_random.Next(-15, 0), _random.Next(-15, 16));
-
-                tribbleCoo.Play();
-            }
-            else if (tribbleGreyRect.Left < 0)
-            {
-                tribbleGreyRect.X = 0;
-
-                tribbleGreySpeed = new Vector2(_random.Next(1, 16), _random.Next(-15, 16));
-
-                tribbleCoo.Play();
-            }
-
-            if (tribbleGreyRect.Bottom > _graphics.PreferredBackBufferHeight)
-            {
-                tribbleGreyRect.Y = _graphics.PreferredBackBufferHeight - tribbleGreyRect.Height;
-
-                tribbleGreySpeed = new Vector2(_random.Next(-15, 16), _random.Next(-15, 0));
-
-                tribbleCoo.Play();
-            }
-            else if (tribbleGreyRect.Top < 0)
-            {
-                tribbleGreyRect.Y = 0;
-
-                tribbleGreySpeed = new Vector2(_random.Next(-15, 16), _random.Next(1, 16));
-
-                tribbleCoo.Play();
-            }
-            //
-
-            //Brown tribble
-            tribbleBrownRect.X += (int)tribbleBrownSpeed.X;
-            if (tribbleBrownRect.Right > _graphics.PreferredBackBufferWidth)
-            {
-                tribbleBrownRect.X = _graphics.PreferredBackBufferWidth - tribbleBrownRect.Width;
-                tribbleBrownSpeed = new Vector2(_random.Next(-16, 0), 0);
-                tribbleCoo.Play();
-            }
-            else if (tribbleBrownRect.Left < 0)
-            {
-                tribbleBrownRect.X = 0;
-                tribbleBrownSpeed = new Vector2(_random.Next(1, 16), 0);
-                tribbleCoo.Play();
-            }
-            //
-
-            //Orange tribble A.K.A the Tribble of Chaos
-            tribbleOrangeRect.Offset(tribbleOrangeSpeed);
-            if (tribbleOrangeRect.Right > _graphics.PreferredBackBufferWidth || tribbleOrangeRect.Left < 0)
-            {
-                bgColor = GetRandColor();
-
-                tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
-
-                tribbleCoo.Play();
-
-                if (tribbleOrangeSpeed.X < 500 & tribbleOrangeSpeed.X > 0)
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    tribbleOrangeSpeed.X += 1;
-                }
-                else if (tribbleOrangeSpeed.X > -500 & tribbleOrangeSpeed.X < 0)
-                {
-                    tribbleOrangeSpeed.X -= 1;
+                    Window.Title = "Tribble Yard";
+                    bgColor = Color.White;
+
+                    screen = Screen.TribbleYard;
                 }
 
-                tribbleOrangeSpeed.X *= -1;
             }
-
-            if (tribbleOrangeRect.Bottom > _graphics.PreferredBackBufferHeight || tribbleOrangeRect.Top < 0)
+            else if (screen == Screen.TribbleYard)
             {
-                bgColor = GetRandColor();
-
-                tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
-
-                tribbleCoo.Play();
-
-                if (tribbleOrangeSpeed.Y < 500 & tribbleOrangeSpeed.Y > 0)
+                // Gray tribble
+                tribbleGreyRect.Offset(tribbleGreySpeed);
+                if (tribbleGreyRect.Right > _graphics.PreferredBackBufferWidth)
                 {
-                    tribbleOrangeSpeed.Y += 1;
+                    tribbleGreyRect.X = _graphics.PreferredBackBufferWidth - tribbleGreyRect.Width;
+
+                    tribbleGreySpeed = new Vector2(_random.Next(-15, 0), _random.Next(-15, 16));
+
+                    tribbleCoo.Play();
                 }
-                else if (tribbleOrangeSpeed.Y > -500 & tribbleOrangeSpeed.Y < 0)
+                else if (tribbleGreyRect.Left < 0)
                 {
-                    tribbleOrangeSpeed.Y -= 1;
+                    tribbleGreyRect.X = 0;
+
+                    tribbleGreySpeed = new Vector2(_random.Next(1, 16), _random.Next(-15, 16));
+
+                    tribbleCoo.Play();
                 }
 
-                tribbleOrangeSpeed.Y *= -1;
+                if (tribbleGreyRect.Bottom > _graphics.PreferredBackBufferHeight)
+                {
+                    tribbleGreyRect.Y = _graphics.PreferredBackBufferHeight - tribbleGreyRect.Height;
+
+                    tribbleGreySpeed = new Vector2(_random.Next(-15, 16), _random.Next(-15, 0));
+
+                    tribbleCoo.Play();
+                }
+                else if (tribbleGreyRect.Top < 0)
+                {
+                    tribbleGreyRect.Y = 0;
+
+                    tribbleGreySpeed = new Vector2(_random.Next(-15, 16), _random.Next(1, 16));
+
+                    tribbleCoo.Play();
+                }
+                //
+
+                //Brown tribble
+                tribbleBrownRect.X += (int)tribbleBrownSpeed.X;
+                if (tribbleBrownRect.Right > _graphics.PreferredBackBufferWidth)
+                {
+                    tribbleBrownRect.X = _graphics.PreferredBackBufferWidth - tribbleBrownRect.Width;
+                    tribbleBrownSpeed = new Vector2(_random.Next(-16, 0), 0);
+                    tribbleCoo.Play();
+                }
+                else if (tribbleBrownRect.Left < 0)
+                {
+                    tribbleBrownRect.X = 0;
+                    tribbleBrownSpeed = new Vector2(_random.Next(1, 16), 0);
+                    tribbleCoo.Play();
+                }
+                //
+
+                //Orange tribble A.K.A the Tribble of Chaos
+                tribbleOrangeRect.Offset(tribbleOrangeSpeed);
+                if (tribbleOrangeRect.Right > _graphics.PreferredBackBufferWidth || tribbleOrangeRect.Left < 0)
+                {
+                    bgColor = GetRandColor();
+
+                    tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+
+                    tribbleCoo.Play();
+
+                    if (tribbleOrangeSpeed.X < 500 & tribbleOrangeSpeed.X > 0)
+                    {
+                        tribbleOrangeSpeed.X += 1;
+                    }
+                    else if (tribbleOrangeSpeed.X > -500 & tribbleOrangeSpeed.X < 0)
+                    {
+                        tribbleOrangeSpeed.X -= 1;
+                    }
+
+                    tribbleOrangeSpeed.X *= -1;
+                }
+
+                if (tribbleOrangeRect.Bottom > _graphics.PreferredBackBufferHeight || tribbleOrangeRect.Top < 0)
+                {
+                    bgColor = GetRandColor();
+
+                    tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+
+                    tribbleCoo.Play();
+
+                    if (tribbleOrangeSpeed.Y < 500 & tribbleOrangeSpeed.Y > 0)
+                    {
+                        tribbleOrangeSpeed.Y += 1;
+                    }
+                    else if (tribbleOrangeSpeed.Y > -500 & tribbleOrangeSpeed.Y < 0)
+                    {
+                        tribbleOrangeSpeed.Y -= 1;
+                    }
+
+                    tribbleOrangeSpeed.Y *= -1;
+                }
+
+                if (tribbleOrangeRect.Intersects(tribbleGreyRect) || tribbleOrangeRect.Intersects(tribbleBrownRect) || tribbleOrangeRect.Intersects(tribbleCreamRect))
+                {
+                    tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+
+                    tribbleCoo.Play();
+
+                    tribbleOrangeSpeed.X *= -1;
+                    tribbleOrangeSpeed.Y *= 1;
+                }
+                //
+
+                //Cream tribble
+                tribbleCreamRect.Offset(tribbleCreamSpeed);
+                if (tribbleCreamRect.Top > _graphics.PreferredBackBufferHeight)
+                {
+                    tribbleCoo.Play();
+                    tribbleCreamRect.Y = 0 - tribbleCreamRect.Height;
+
+                    tribbleCreamSpeed.Y = _random.Next(1, 16);
+                }
+                //
             }
-
-            if (tribbleOrangeRect.Intersects(tribbleGreyRect) || tribbleOrangeRect.Intersects(tribbleBrownRect) || tribbleOrangeRect.Intersects(tribbleCreamRect))
-            {
-                tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
-
-                tribbleCoo.Play();
-
-                tribbleOrangeSpeed.X *= -1;
-                tribbleOrangeSpeed.Y *= 1;
-            }
-            //
-
-            //Cream tribble
-            tribbleCreamRect.Offset(tribbleCreamSpeed);
-            if (tribbleCreamRect.Top > _graphics.PreferredBackBufferHeight)
-            {
-                tribbleCoo.Play();
-                tribbleCreamRect.Y = 0 - tribbleCreamRect.Height;
-
-                tribbleCreamSpeed.Y = _random.Next(1, 16);
-            }
-            //
             base.Update(gameTime);
         }
 
@@ -236,18 +269,22 @@ namespace Monogame_Lesson_3___Animation_Part_1
         {
             GraphicsDevice.Clear(Color.White);
 
-  
                 // TODO: Add your drawing code here
             
             GraphicsDevice.Clear(bgColor);
             
             _spriteBatch.Begin();
-            
-            _spriteBatch.Draw(tribbleGreyTexture, tribbleGreyRect, Color.White);
-            _spriteBatch.Draw(tribbleBrownTexture, tribbleBrownRect, Color.White);
-            _spriteBatch.Draw(tribbleCreamTexture, tribbleCreamRect, Color.White);
-            _spriteBatch.Draw(tribbleOrangeTexture, tribbleOrangeRect, Color.White);
-
+            if (screen == Screen.Intro)
+            {
+                _spriteBatch.Draw(tribbleIntroTexture, tribbleIntroRect, Color.White);
+            }
+            else if (screen == Screen.TribbleYard)
+            {
+                _spriteBatch.Draw(tribbleGreyTexture, tribbleGreyRect, Color.White);
+                _spriteBatch.Draw(tribbleBrownTexture, tribbleBrownRect, Color.White);
+                _spriteBatch.Draw(tribbleCreamTexture, tribbleCreamRect, Color.White);
+                _spriteBatch.Draw(tribbleOrangeTexture, tribbleOrangeRect, Color.White);
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);
