@@ -156,11 +156,13 @@ namespace Monogame_Lesson_3___Animation_Part_1
             {
                 tribbleBrownRect.X = _graphics.PreferredBackBufferWidth - tribbleBrownRect.Width;
                 tribbleBrownSpeed = new Vector2(_random.Next(-16, 0), 0);
+                tribbleCoo.Play();
             }
             else if (tribbleBrownRect.Left < 0)
             {
                 tribbleBrownRect.X = 0;
                 tribbleBrownSpeed = new Vector2(_random.Next(1, 16), 0);
+                tribbleCoo.Play();
             }
             //
 
@@ -221,6 +223,7 @@ namespace Monogame_Lesson_3___Animation_Part_1
             tribbleCreamRect.Offset(tribbleCreamSpeed);
             if (tribbleCreamRect.Top > _graphics.PreferredBackBufferHeight)
             {
+                tribbleCoo.Play();
                 tribbleCreamRect.Y = 0 - tribbleCreamRect.Height;
 
                 tribbleCreamSpeed.Y = _random.Next(1, 16);
