@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -38,12 +39,20 @@ namespace Monogame_Lesson_3___Animation_Part_1
         Vector2 tribbleCreamSpeed;
         //
 
+        //Sonic Ball
+        Texture2D sonicBallTexture;
+        Rectangle sonicBallRect;
+        Vector2 sonicBallSpeed;
+        //
+
         Texture2D tribbleIntroTexture;
         Rectangle tribbleIntroRect;
 
         Color bgColor;
 
         SoundEffect tribbleCoo;
+
+        Song bgm;
 
         MouseState mouseState;
 
@@ -95,6 +104,14 @@ namespace Monogame_Lesson_3___Animation_Part_1
             tribbleCreamSpeed = new Vector2(0, 2);
             //
 
+            //Sonic Ball
+            sonicBallRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+            sonicBallSpeed = new Vector2(2,2);
+            //
+
+            MediaPlayer.Volume = 0.8f;
+            MediaPlayer.IsRepeating = true;
+
             base.Initialize();
         }
 
@@ -115,6 +132,10 @@ namespace Monogame_Lesson_3___Animation_Part_1
             tribbleIntroTexture = Content.Load<Texture2D>("tribble_intro");
 
             tribbleCoo = Content.Load<SoundEffect>("tribble_coo");
+
+            bgm = Content.Load<Song>("Sonic_2_Drowning");
+
+            sonicBallTexture = Content.Load<Texture2D>("sonicBall");
         }
 
         private Color GetRandColor()
@@ -140,6 +161,7 @@ namespace Monogame_Lesson_3___Animation_Part_1
                     bgColor = Color.White;
 
                     screen = Screen.TribbleYard;
+                    MediaPlayer.Play(bgm);
                 }
 
             }
@@ -208,11 +230,12 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
                     tribbleCoo.Play();
 
-                    if (tribbleOrangeSpeed.X < 500 & tribbleOrangeSpeed.X > 0)
+
+                    if (tribbleOrangeSpeed.X < 100000 & tribbleOrangeSpeed.X > 0)
                     {
                         tribbleOrangeSpeed.X += 1;
                     }
-                    else if (tribbleOrangeSpeed.X > -500 & tribbleOrangeSpeed.X < 0)
+                    else if (tribbleOrangeSpeed.X > -100000 & tribbleOrangeSpeed.X < 0)
                     {
                         tribbleOrangeSpeed.X -= 1;
                     }
@@ -228,11 +251,11 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
                     tribbleCoo.Play();
 
-                    if (tribbleOrangeSpeed.Y < 500 & tribbleOrangeSpeed.Y > 0)
+                    if (tribbleOrangeSpeed.Y < 100000 & tribbleOrangeSpeed.Y > 0)
                     {
                         tribbleOrangeSpeed.Y += 1;
                     }
-                    else if (tribbleOrangeSpeed.Y > -500 & tribbleOrangeSpeed.Y < 0)
+                    else if (tribbleOrangeSpeed.Y > -100000 & tribbleOrangeSpeed.Y < 0)
                     {
                         tribbleOrangeSpeed.Y -= 1;
                     }
@@ -256,9 +279,27 @@ namespace Monogame_Lesson_3___Animation_Part_1
                 if (tribbleCreamRect.Top > _graphics.PreferredBackBufferHeight)
                 {
                     tribbleCoo.Play();
+
                     tribbleCreamRect.Y = 0 - tribbleCreamRect.Height;
 
                     tribbleCreamSpeed.Y = _random.Next(1, 16);
+                }
+                //
+
+                //Sonic Ball
+                sonicBallRect.Offset(sonicBallSpeed);
+                {
+                    if (sonicBallRect.Bottom > _graphics.PreferredBackBufferHeight)
+                    {
+                        sonicBallRect.Y = _graphics.PreferredBackBufferHeight - sonicBallRect.Height;
+                        sonicBallSpeed.Y += 1;
+                        sonicBallSpeed.Y *= -1;
+                    }
+
+                    if (sonicBallRect.Top < 0)
+                    {
+
+                    }
                 }
                 //
             }
@@ -284,6 +325,7 @@ namespace Monogame_Lesson_3___Animation_Part_1
                 _spriteBatch.Draw(tribbleBrownTexture, tribbleBrownRect, Color.White);
                 _spriteBatch.Draw(tribbleCreamTexture, tribbleCreamRect, Color.White);
                 _spriteBatch.Draw(tribbleOrangeTexture, tribbleOrangeRect, Color.White);
+                _spriteBatch.Draw(sonicBallTexture, sonicBallRect, Color.White);
             }
             _spriteBatch.End();
 
