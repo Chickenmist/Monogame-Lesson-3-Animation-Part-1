@@ -31,6 +31,12 @@
 /processorParam:TextureFormat=Color
 /build:sonicBall.png
 
+#begin SonicJumping.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SonicJumping.wav
+
 #begin tribble_coo.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

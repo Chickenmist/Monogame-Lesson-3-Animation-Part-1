@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Monogame_Lesson_3___Animation_Part_1
@@ -52,6 +54,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
         SoundEffect tribbleCoo;
 
+        SoundEffect sonicBounce;
+
         Song bgm;
 
         MouseState mouseState;
@@ -59,7 +63,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
         enum Screen
         {
             Intro,
-            TribbleYard
+            TribbleYard,
+            EndScreen
         }
 
         Screen screen;
@@ -136,6 +141,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
             bgm = Content.Load<Song>("Sonic_2_Drowning");
 
             sonicBallTexture = Content.Load<Texture2D>("sonicBall");
+
+            sonicBounce = Content.Load<SoundEffect>("SonicJumping");
         }
 
         private Color GetRandColor()
@@ -288,21 +295,82 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
                 //Sonic Ball
                 sonicBallRect.Offset(sonicBallSpeed);
+                if (sonicBallRect.Bottom > _graphics.PreferredBackBufferHeight)
                 {
-                    if (sonicBallRect.Bottom > _graphics.PreferredBackBufferHeight)
+                    sonicBounce.Play();
+
+                    sonicBallRect.Y = _graphics.PreferredBackBufferHeight - sonicBallRect.Height;
+
+                    if (sonicBallSpeed.Y < 100)
                     {
-                        sonicBallRect.Y = _graphics.PreferredBackBufferHeight - sonicBallRect.Height;
                         sonicBallSpeed.Y += 1;
-                        sonicBallSpeed.Y *= -1;
                     }
+                    sonicBallSpeed.Y *= -1;
+                }
+                else if (sonicBallRect.Top < 0)
+                {
+                    sonicBounce.Play();
 
-                    if (sonicBallRect.Top < 0)
+                    sonicBallRect.Y = 0;
+
+                    if (sonicBallSpeed.Y > -100)
                     {
-
+                        sonicBallSpeed.Y -= 1;
                     }
+                    sonicBallSpeed.Y *= -1;
+                }
+
+                if (sonicBallRect.Left < 0)
+                {
+                    sonicBounce.Play();
+
+                    sonicBallRect.X = 0;
+
+                    if (sonicBallSpeed.X > -100)
+                    {
+                        sonicBallSpeed.X -= 1;
+                    }
+                    sonicBallSpeed.X *= -1;
+
+                }
+                else if (sonicBallRect.Right >= _graphics.PreferredBackBufferWidth)
+                {
+                    sonicBounce.Play();
+
+                    sonicBallRect.X = _graphics.PreferredBackBufferWidth - sonicBallRect.Width;
+
+                    if (sonicBallSpeed.X < 100)
+                    {
+                        sonicBallSpeed.X += 1;
+                    }
+                    sonicBallSpeed.X *= -1;
+
                 }
                 //
+
+                if (mouseState.LeftButton == ButtonState.Pressed && sonicBallRect.Contains(mouseState.X, mouseState.Y))
+                {
+                    MediaPlayer.Stop();
+                    sonicBallSpeed = new Vector2(6, 6);
+                    sonicBallRect.Location = new Point(0, 0);
+                    screen = Screen.EndScreen;
+                }
             }
+            else if (screen == Screen.EndScreen)
+            {                
+                sonicBallRect.Offset(sonicBallSpeed);
+                if (sonicBallRect.Bottom > _graphics.PreferredBackBufferHeight || sonicBallRect.Top < 0)
+                { 
+                    sonicBallSpeed.Y *= -1;
+                }
+                
+                if (sonicBallRect.Left < 0 || sonicBallRect.Right > _graphics.PreferredBackBufferWidth)
+                {
+                    sonicBallSpeed.X *= -1;
+                }
+                
+            }
+
             base.Update(gameTime);
         }
 
@@ -325,6 +393,10 @@ namespace Monogame_Lesson_3___Animation_Part_1
                 _spriteBatch.Draw(tribbleBrownTexture, tribbleBrownRect, Color.White);
                 _spriteBatch.Draw(tribbleCreamTexture, tribbleCreamRect, Color.White);
                 _spriteBatch.Draw(tribbleOrangeTexture, tribbleOrangeRect, Color.White);
+                _spriteBatch.Draw(sonicBallTexture, sonicBallRect, Color.White);
+            }
+            else if(screen == Screen.EndScreen)
+            {
                 _spriteBatch.Draw(sonicBallTexture, sonicBallRect, Color.White);
             }
             _spriteBatch.End();
