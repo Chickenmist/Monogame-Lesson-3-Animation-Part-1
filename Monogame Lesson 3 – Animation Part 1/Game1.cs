@@ -50,15 +50,22 @@ namespace Monogame_Lesson_3___Animation_Part_1
         Texture2D tribbleIntroTexture;
         Rectangle tribbleIntroRect;
 
+        Texture2D peacefulYardTexture;
+        Rectangle peacefulYardRect;
+
         Color bgColor;
 
         SoundEffect tribbleCoo;
 
         SoundEffect sonicBounce;
 
-        Song bgm;
+        Song chaosBGM;
+
+        Song peacefulBGM;
 
         MouseState mouseState;
+
+        SpriteFont description;
 
         enum Screen
         {
@@ -88,6 +95,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
             screen = Screen.Intro;
             tribbleIntroRect = new Rectangle(0, 0, 800, 600);
+
+            peacefulYardRect = new Rectangle(0, 0, 800, 600);
 
             //Gray tribble 
             tribbleGreyRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
@@ -138,11 +147,17 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
             tribbleCoo = Content.Load<SoundEffect>("tribble_coo");
 
-            bgm = Content.Load<Song>("Sonic_2_Drowning");
+            chaosBGM = Content.Load<Song>("Sonic_2_Drowning");
+
+            peacefulBGM = Content.Load<Song>("ChaoGarden");
 
             sonicBallTexture = Content.Load<Texture2D>("sonicBall");
 
             sonicBounce = Content.Load<SoundEffect>("SonicJumping");
+
+            description = Content.Load<SpriteFont>("description");
+
+            peacefulYardTexture = Content.Load<Texture2D>("ChaoGardenBackground");
         }
 
         private Color GetRandColor()
@@ -164,11 +179,11 @@ namespace Monogame_Lesson_3___Animation_Part_1
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    Window.Title = "Tribble Yard";
+                    Window.Title = "Chaos Yard";
                     bgColor = Color.White;
 
                     screen = Screen.TribbleYard;
-                    MediaPlayer.Play(bgm);
+                    MediaPlayer.Play(chaosBGM);
                 }
 
             }
@@ -353,6 +368,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
                     MediaPlayer.Stop();
                     sonicBallSpeed = new Vector2(6, 6);
                     sonicBallRect.Location = new Point(0, 0);
+                    MediaPlayer.Play(peacefulBGM);
+                    Window.Title = "Peaceful Yard";
                     screen = Screen.EndScreen;
                 }
             }
@@ -368,9 +385,45 @@ namespace Monogame_Lesson_3___Animation_Part_1
                 {
                     sonicBallSpeed.X *= -1;
                 }
-                
-            }
 
+                if (mouseState.RightButton == ButtonState.Pressed && sonicBallRect.Contains(mouseState.X, mouseState.Y))
+                {
+                    MediaPlayer.Stop();
+                    MediaPlayer.Play(chaosBGM);
+
+                    //This is to reset the screen
+                    
+                    Window.Title = "Chaos Yard";
+
+                    //Gray tribble 
+                    tribbleGreyRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+                    tribbleGreySpeed = new Vector2(2, 2);
+                    //
+
+                    //Brown tribble
+                    tribbleBrownRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+                    tribbleBrownSpeed = new Vector2(2, 0);
+                    //
+
+                    //Orange tribble
+                    tribbleOrangeRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+                    tribbleOrangeSpeed = new Vector2(2, 2);
+                    //
+
+                    //Cream tribble
+                    tribbleCreamRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+                    tribbleCreamSpeed = new Vector2(0, 2);
+                    //
+
+                    //Sonic Ball
+                    sonicBallRect = new Rectangle(_random.Next(0, _graphics.PreferredBackBufferWidth - 100), _random.Next(0, _graphics.PreferredBackBufferHeight - 100), 100, 100);
+                    sonicBallSpeed = new Vector2(2, 2);
+                    //
+
+                    bgColor = Color.White;
+                    screen = Screen.TribbleYard;
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -386,6 +439,10 @@ namespace Monogame_Lesson_3___Animation_Part_1
             if (screen == Screen.Intro)
             {
                 _spriteBatch.Draw(tribbleIntroTexture, tribbleIntroRect, Color.White);
+                _spriteBatch.DrawString(description, "Click to procced to the chaos yard", new Vector2(10,10), Color.White);
+                _spriteBatch.DrawString(description, "In the chaos yard left click Sonic to go to a more peaceful yard", new Vector2(10,40), Color.White);
+                _spriteBatch.DrawString(description, "In the peaceful yard right click Sonic to return to the chaos yard", new Vector2(10,70), Color.White);
+                _spriteBatch.DrawString(description, "Be careful though, Sonic will speed up while in the chaos yard", new Vector2(10, 100), Color.White);
             }
             else if (screen == Screen.TribbleYard)
             {
@@ -397,6 +454,7 @@ namespace Monogame_Lesson_3___Animation_Part_1
             }
             else if(screen == Screen.EndScreen)
             {
+                _spriteBatch.Draw(peacefulYardTexture, peacefulYardRect, Color.White);
                 _spriteBatch.Draw(sonicBallTexture, sonicBallRect, Color.White);
             }
             _spriteBatch.End();
