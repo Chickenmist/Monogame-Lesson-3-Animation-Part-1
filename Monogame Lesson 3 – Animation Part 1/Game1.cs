@@ -177,7 +177,7 @@ namespace Monogame_Lesson_3___Animation_Part_1
 
             if (screen == Screen.Intro)
             {
-                if (mouseState.LeftButton == ButtonState.Pressed)
+                if (mouseState.RightButton == ButtonState.Pressed)
                 {
                     Window.Title = "Chaos Yard";
                     bgColor = Color.White;
@@ -439,8 +439,8 @@ namespace Monogame_Lesson_3___Animation_Part_1
             if (screen == Screen.Intro)
             {
                 _spriteBatch.Draw(tribbleIntroTexture, tribbleIntroRect, Color.White);
-                _spriteBatch.DrawString(description, "Click to procced to the chaos yard", new Vector2(10,10), Color.White);
-                _spriteBatch.DrawString(description, "In the chaos yard left click Sonic to go to a more peaceful yard", new Vector2(10,40), Color.White);
+                _spriteBatch.DrawString(description, "Right click to procced to the chaos yard", new Vector2(10,10), Color.White);
+                _spriteBatch.DrawString(description, "In the chaos yard left click Sonic to go to the peaceful yard", new Vector2(10,40), Color.White);
                 _spriteBatch.DrawString(description, "In the peaceful yard right click Sonic to return to the chaos yard", new Vector2(10,70), Color.White);
                 _spriteBatch.DrawString(description, "Be careful though, Sonic will speed up while in the chaos yard", new Vector2(10, 100), Color.White);
             }
